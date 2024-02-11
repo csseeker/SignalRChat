@@ -12,12 +12,15 @@ namespace SignalRChat.Hubs
         {
             Debug.WriteLine($" *** OnConnectedAsync: {Context.ConnectionId} {Context.User}:{Context.UserIdentifier}");
 
-            string? UserName = Context?.User?.Identity?.Name;
+            // string? UserName = Context?.User?.Identity?.Name;
 
-            if (!string.IsNullOrWhiteSpace(UserName) && UserName.Contains("shripad", StringComparison.InvariantCultureIgnoreCase))
-            {
+            // if (!string.IsNullOrWhiteSpace(UserName) && UserName.Contains("shripad", StringComparison.InvariantCultureIgnoreCase))
+            // {
                 await Groups.AddToGroupAsync(Context?.ConnectionId, "ShripadGroup");
-            }
+            // }
+
+            Debug.WriteLine($" *** Added user {Context.ConnectionId} to 'ShripadGroup'");
+
             await base.OnConnectedAsync();
 
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);

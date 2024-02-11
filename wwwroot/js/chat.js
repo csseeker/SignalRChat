@@ -23,6 +23,8 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
+    // alert("connectionId: " + connection.connectionId);
+    document.getElementById("connectionId").value = connection.connectionId;
 }).catch(function (err) {
     return console.error(err.toString());
 });
@@ -33,7 +35,7 @@ document.getElementById("sendButton").addEventListener("click", function (event)
 
     // alert("connection.state: " + connection.state);
 
-    if (connection.state !== "Connected" || connection.state !== "Connecting") {
+    if (connection.state === "Disconnected") {
         // if the connection is not open, start it
         connection.start().then(function () {
                     document.getElementById("sendButton").disabled = false;
