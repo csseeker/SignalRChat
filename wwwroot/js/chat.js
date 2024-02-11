@@ -1,6 +1,13 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").withServerTimeout(60000).build();
+const DEFAULT_SERVER_TIMEOUT_MILISECODNS = 60000;
+const KEEP_ALIVE_INTERVAL_IN_MILLISECONDS = 5000;
+
+var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub")
+                            .withServerTimeout(DEFAULT_SERVER_TIMEOUT_MILISECODNS)
+                            .withAutomaticReconnect()
+                            .withKeepAliveInterval(KEEP_ALIVE_INTERVAL_IN_MILLISECONDS) // Send a keep-alive message every KEEP_ALIVE_INTERVAL_IN_MILLISECONDS seconds
+                            .build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
@@ -24,9 +31,9 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     var user = document.getElementById("userInput").value;
     var message = document.getElementById("messageInput").value;
 
-    alert("connection.state: " + connection.state);
+    // alert("connection.state: " + connection.state);
 
-    if (connection.state !== "Connected") {
+    if (connection.state !== "Connected" || connection.state !== "Connecting") {
         // if the connection is not open, start it
         connection.start().then(function () {
                     document.getElementById("sendButton").disabled = false;
