@@ -5,6 +5,7 @@ namespace SignalRChat.Hubs
 {
     public class ChatHub : Hub
     {
+        static long counter=0;
         static Dictionary<string, string> ConnectedUserGroups = new Dictionary<string, string>();
 
         // Add event handler for OnConnected
@@ -16,13 +17,17 @@ namespace SignalRChat.Hubs
 
             // if (!string.IsNullOrWhiteSpace(UserName) && UserName.Contains("shripad", StringComparison.InvariantCultureIgnoreCase))
             // {
-                await Groups.AddToGroupAsync(Context?.ConnectionId, "ShripadGroup");
+
+            ChatHub.counter++;
+
+            if(ChatHub.counter %2 == 0)
+            {
+                var connId = Context.ConnectionId;
+                Debug.WriteLine($"Adding connection [{connId}] to ShripadGroup!");
+                await Groups.AddToGroupAsync(connId, "ShripadGroup");
+            }
             // }
-
-            Debug.WriteLine($" *** Added user {Context.ConnectionId} to 'ShripadGroup'");
-
             await base.OnConnectedAsync();
-
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
         }
 
@@ -36,7 +41,7 @@ namespace SignalRChat.Hubs
 
         public async Task SendMessage(string user, string message)
         {
-            Debug.WriteLine($" *** SendMessage: {user} {message}");
+            Debug.WriteLine($" *** SendMessage only to ShripadGroup users: {user} {message}");
             // Send message only to users with name starting with 'user'
             // await Clients.User(user).SendAsync("ReceiveMessage", user, message);
 
