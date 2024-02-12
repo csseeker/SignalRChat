@@ -4,8 +4,8 @@ const DEFAULT_SERVER_TIMEOUT_MILISECODNS = 60000;
 const KEEP_ALIVE_INTERVAL_IN_MILLISECONDS = 5000;
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub")
-                            .withServerTimeout(DEFAULT_SERVER_TIMEOUT_MILISECODNS)
-                            .withAutomaticReconnect()
+                            .withServerTimeout(DEFAULT_SERVER_TIMEOUT_MILISECODNS) // We can control how much time to give server to respond
+                            .withAutomaticReconnect() // Tries to reconnect (we can also decide policy) if the connection is lost
                             .withKeepAliveInterval(KEEP_ALIVE_INTERVAL_IN_MILLISECONDS) // Send a keep-alive message every KEEP_ALIVE_INTERVAL_IN_MILLISECONDS seconds
                             .build();
 
