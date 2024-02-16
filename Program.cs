@@ -4,7 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSignalR();
+
+builder.Services.AddSignalR().AddStackExchangeRedis("127.0.0.1:6379");
 
 var app = builder.Build();
 
@@ -16,7 +17,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Add MessageController to the routing
+app.MapControllerRoute(
+       name: "default",
+          pattern: "{controller=Message}/{action=Index}/{id?}");
+
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
